@@ -45,28 +45,29 @@ def contactExtraction(api_key):
         'properties.createdate',
         'properties.lastmodifieddate'
     ]
+    #Data of the request
+    data = {
+        "properties": properties,
+        #Filter to get only the contacts that are allowed to collect
+        "filterGroups": [
+            {
+                "filters": [
+                    {
+                        "propertyName": "allowed_to_collect",
+                        "operator": "EQ",
+                        "value": "true"
+                    }
+                ]
+            }
+        ],
+        #After value to get the next contacts
+        "after": str(after),
+        "limit": limit
+    }
 
     #Loop over the contacts
     while results and next_page:
-        #Data of the request
-        data = {
-            "properties": properties,
-            #Filter to get only the contacts that are allowed to collect
-            "filterGroups": [
-                {
-                    "filters": [
-                        {
-                            "propertyName": "allowed_to_collect",
-                            "operator": "EQ",
-                            "value": "true"
-                        }
-                    ]
-                }
-            ],
-            #After value to get the next contacts
-            "after": str(after),
-            "limit": limit
-        }
+        
 
         #Request to the API
         response = requests.post(url, headers=headers, json=data)
